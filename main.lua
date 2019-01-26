@@ -3,6 +3,7 @@ require("conf")
 GROUNDHEIGHT = 500;
 SPEED = 200;
 SPEED_DEC = 3;
+CAMERA_TRESHOLD = 200;
 
 player = {
     width = 100;
@@ -53,12 +54,12 @@ end
 
 function drawGround()
   love.graphics.setColor(0,0,0,1)
-  love.graphics.rectangle("fill", 0, GROUNDHEIGHT, WIDTH, 100)
+  love.graphics.rectangle("fill", WIDTH / 2 - player.x, GROUNDHEIGHT, WIDTH, 100)
 end
 
 function drawPlayer()
   love.graphics.setColor(0.02, 0.3, 0.8, 1)
-  love.graphics.rectangle("fill", player.x, player.y, player.height, player.width)
+  love.graphics.rectangle("fill", 400 - player.width / 2, player.y, player.height, player.width)
 end
 
 function checkKeys(dt)
@@ -68,3 +69,4 @@ function checkKeys(dt)
     player.speed.x = SPEED
   end
 end
+
