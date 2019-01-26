@@ -15,7 +15,7 @@ camera = {
 player = {
     width = 100;
     height = 100;
-    x = 400;
+    x = 350;
     y = GROUNDHEIGHT - 100;
     speed = {
       x = 0;
@@ -65,12 +65,13 @@ function isMovingRight()
 end
 
 function love.draw()
-  drawBackground()
-  love.graphics.translate(camera.x, camera.y)
-  drawPlayer()
-  love.graphics.setColor(1,1,1,1)
-  love.graphics.draw(rain_particles, 0, 0)
-  drawGround()
+    drawBackground()
+    love.graphics.translate(camera.x, camera.y)
+    drawPlayer()
+    love.graphics.setColor(1,1,1,1)
+    love.graphics.draw(rain_particles, 0, 0)
+    drawGround()
+    love.graphics.translate(-camera.x, -camera.y)
 end
 
 function drawBackground()
@@ -97,8 +98,8 @@ function checkKeys()
 end
 
 function updateCameraCoords(distance)
-    if CAMERA_THRESHOLD_LEFT < player.x - camera.x
-    and player.x - camera.x < CAMERA_THRESHOLD_RIGHT then
+    if CAMERA_THRESHOLD_LEFT < player.x + player.width / 2 + camera.x
+    and player.x + player.width / 2 + camera.x < CAMERA_THRESHOLD_RIGHT then
       -- dont move camera
     else
       camera.x = camera.x + distance
