@@ -1,4 +1,5 @@
 require("conf")
+require("events")
 
 GROUNDHEIGHT = 500;
 SPEED = 200;
@@ -39,6 +40,8 @@ function love.load()
   rain_particles:setEmissionArea("normal", WIDTH, GROUNDHEIGHT, 0, false)
   rain_particles:setLinearAcceleration(-20, 90, -25, 100)
   rain_particles:setSizes(0, 1, 0, 1)
+
+  ev = TextEvent:new(5, 600)
 end
 
 function love.update(dt)
@@ -54,6 +57,8 @@ function love.update(dt)
   checkKeys(dt)
   updateCameraCoords(original_x - player.x)
   rain_particles:update(dt)
+
+  ev:update(dt)
 end
 
 function isMovingLeft()
@@ -72,10 +77,16 @@ function love.draw()
     love.graphics.draw(rain_particles, 0, 0)
     drawGround()
     love.graphics.translate(-camera.x, -camera.y)
+    
+    local e = running_events_list
+    while e do
+      e.value:run()
+      e = running_events_list.next
+    end
 end
 
 function drawBackground()
-  love.graphics.setColor(1,1,1,1)
+  love.graphics.setColor(0.619,0.619,0.619,1)
   love.graphics.rectangle("fill", 0, 0, WIDTH, HEIGHT)
 end
 
