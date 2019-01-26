@@ -65,8 +65,8 @@ function isMovingRight()
 end
 
 function love.draw()
-  love.graphics.translate(camera.x, camera.y)
   drawBackground()
+  love.graphics.translate(camera.x, camera.y)
   drawPlayer()
   love.graphics.setColor(1,1,1,1)
   love.graphics.draw(rain_particles, 0, 0)
@@ -97,8 +97,8 @@ function checkKeys()
 end
 
 function updateCameraCoords(distance)
-    if CAMERA_THRESHOLD_LEFT + camera.x < player.x 
-    and player.x < CAMERA_THRESHOLD_RIGHT + camera.x then
+    if CAMERA_THRESHOLD_LEFT < player.x - camera.x
+    and player.x - camera.x < CAMERA_THRESHOLD_RIGHT then
       -- dont move camera
     else
       camera.x = camera.x + distance
