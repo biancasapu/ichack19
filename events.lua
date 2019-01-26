@@ -2,15 +2,17 @@ TextEvent = {
   x = 400;
   triggered = false;
   active = false;
+  message = "NO MESSAGE";
   timer = 3;
 }
 
 running_events_list = nil
 
-function TextEvent:new(time, x, o)
+function TextEvent:new(message, time, x, o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
+  self.message = message
   self.timer = time
   self.x = x
   return o
@@ -31,7 +33,12 @@ function TextEvent:update(dt)
 end
 
 function TextEvent:run()
+  local alpha = 1
+  if self.timer < 2 then
+    alpha = alpha - alpha * (2 - self.timer) / 2
+  end
+
   if self.active then
-    love.graphics.print("benis")
+    love.graphics.print({{0, 0, 0, alpha}, self.message}, 400, 300)
   end
 end

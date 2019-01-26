@@ -41,7 +41,7 @@ function love.load()
   rain_particles:setLinearAcceleration(-20, 90, -25, 100)
   rain_particles:setSizes(0, 1, 0, 1)
 
-  ev = TextEvent:new(5, 600)
+  ev = TextEvent:new("coaieeeeeee", 5, 600)
 end
 
 function love.update(dt)
