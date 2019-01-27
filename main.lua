@@ -63,6 +63,7 @@ function love.load()
       self.active = false
       player.collected_umbrella = true
       TextEvent:new("Ah, much better.", 4, player.x - 50)
+      umbrella_effect:play()
       music:setVolume(0.5)
     end
   end
@@ -76,6 +77,8 @@ function love.load()
   music:setVolume(0.7)
   music:setLooping(true)
   music:play()
+
+  umbrella_effect = love.audio.newSource("assets/sfx/umbrella_effect.mp3", "stream")
 
 end
 
