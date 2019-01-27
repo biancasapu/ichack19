@@ -5,7 +5,7 @@ local anim8 = require 'anim8'
 Timer = require "timer"
 
 GROUNDHEIGHT = 500;
-SPEED_X = 600;
+SPEED_X = 800;
 SPEED_Y = 500;
 SPEED_DEC_X = 10;
 SPEED_DEC_Y = 10;
@@ -76,10 +76,6 @@ function love.load()
 
 end
 
-function dummy()
-
-end
-
 function loadEvents()
   TextEvent:new("Did you really want me to fall? :(", 4, -300)
   TextEvent:new("You're not going to find anything here...", 2, -1500)
@@ -107,7 +103,7 @@ function loadEvents()
   function stopRainEvent:run()
     if self.active then
       self.active = false
-      TextEvent:new("Sigh. It's been storm after storm.", 4, player.x - 50)
+      TextEvent:new("Just like this.", 4, player.x - 50)
       rain_particles:stop()
 
       for i in range(10) do
@@ -138,9 +134,9 @@ function loadEvents()
   RevTextEvent:new("With this drizzle things might not be what they seem...", 5, 6400)
   RevTextEvent:new("Do you ever think about this?", 5, 4800)
   RevTextEvent:new("Or...", 3, 3800)
-  RevTextEvent:new("No, actually, I wonder where my umbrella went...", 5, 3000)
+  RevTextEvent:new("I wonder where my umbrella went...", 5, 3000)
   RevTextEvent:new("Well, I suppose it's gone...", 3, 1500)
-  RevTextEvent:new("It's alright as long as you get home.", 5, 1000)
+  RevTextEvent:new("I guess it's alright as long as you still get home.", 5, 1000)
 
   endGameEvent = RevPositionEvent:new(275)
   function endGameEvent:run()
@@ -185,9 +181,12 @@ function love.update(dt)
   end
 
   sea_anim:update(dt)
+  shore_anim:update(dt)
   walk_anim_r:update(dt)
   walk_anim_l:update(dt)
   idle_anim:update(dt)
+  idle_anim2:update(dt)
+  juvele:update(dt)
   jump_anim_l:update(dt)
   jump_anim_r:update(dt)
 
@@ -222,6 +221,11 @@ function love.draw()
     drawUmbrella()
     drawPlayer()
 
+    if player.reached_end then
+      juvele:draw(idle_img, 40, GROUNDHEIGHT - idle_img:getHeight())
+    end
+
+
     for _, p in pairs(all_props) do
       love.graphics.draw(p.image, p.x, p.y)
     end
@@ -255,7 +259,7 @@ function drawGround()
   end
 
   love.graphics.setColor(1, 1, 1, 0.6)
-  shore_anim:draw(shore_img, ground.x + 12 * WIDTH, ground.y + 30)
+  shore_anim:draw(shore_img, ground.x + 12 * WIDTH - 100, ground.y + 30)
 end
 
 -- lord forgive me
