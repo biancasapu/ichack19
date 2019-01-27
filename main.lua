@@ -77,6 +77,8 @@ function love.load()
   music:setLooping(true)
   music:play()
 
+  loadProps()
+
 end
 
 function love.update(dt)
@@ -104,6 +106,7 @@ function love.update(dt)
     e:update(dt)
   end
 
+  sea_anim:update(dt)
   walk_anim_r:update(dt)
   walk_anim_l:update(dt)
   idle_anim:update(dt)
@@ -125,14 +128,21 @@ end
 
 function love.draw()
     drawBackground()
+    sea_anim:draw(sea_img, 0, HEIGHT - sea_img:getHeight())
     love.graphics.translate(camera.x, camera.y)
+    drawUmbrella()
     drawPlayer()
+
+    for _, p in pairs(all_props) do
+      love.graphics.draw(p.image, p.x, p.y)
+    end
+
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(rain_particles, 0, 0)
     drawGround()
-    drawUmbrella()
+
     love.graphics.translate(-camera.x, -camera.y)
-    
+
     for _, e in pairs(all_events_list) do
       e:run()
     end
@@ -154,14 +164,20 @@ end
 -- lord forgive me
 -- UMBRELLA
 UMBRELLA_X = 3750
-UMBRELLA_HEIGHT = 50
-UMBRELLA_WIDTH = 50
+UMBRELLA_HEIGHT = 150
+UMBRELLA_WIDTH = 150
 
 function drawUmbrella()
-  love.graphics.setColor(0, 1, 0, 1)
+  love.graphics.setColor(1, 1, 1, 1)
 
   if not player.collected_umbrella then
-    love.graphics.rectangle("fill", UMBRELLA_X, ground.y - UMBRELLA_HEIGHT, UMBRELLA_WIDTH, UMBRELLA_HEIGHT)
+    love.graphics.draw(umbrella_img, UMBRELLA_X, ground.y - UMBRELLA_HEIGHT)
+  else
+    if player.dir == "w_right" or player.dir == "still" then
+      love.graphics.draw(umbrella_img, player.x + 5, player.y + 50)
+    else
+      love.graphics.draw(umbrella_img, player.x + player.width - 5, player.y + 50, 0, -1, 1)
+    end
   end
 end
 
