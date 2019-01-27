@@ -32,7 +32,9 @@ ground = {
 }
 
 function love.load()
-  rain_texture = love.graphics.newImage("assets/gfx/rain.png")
+  font = love.graphics.setNewFont("assets/font.ttf", 28)
+
+  local rain_texture = love.graphics.newImage("assets/gfx/rain.png")
   rain_particles = love.graphics.newParticleSystem(rain_texture, 2000)
   rain_particles:setParticleLifetime(3, 8)
   rain_particles:setEmissionRate(500)
@@ -41,7 +43,10 @@ function love.load()
   rain_particles:setLinearAcceleration(-20, 90, -25, 100)
   rain_particles:setSizes(0, 1, 0, 1)
 
-  ev = TextEvent:new("coaieeeeeee", 5, 600)
+  e1 = TextEvent:new("ScHeMa", 2, 700)
+  e2 = TextEvent:new("text message babey....", 5, 600)
+  all_events_list = {next = all_events_list, value = e1}
+  all_events_list = {next = all_events_list, value = e2}
 end
 
 function love.update(dt)
@@ -58,7 +63,11 @@ function love.update(dt)
   updateCameraCoords(original_x - player.x)
   rain_particles:update(dt)
 
-  ev:update(dt)
+  local e = all_events_list
+  while e do
+    e.value:update(dt)
+    e = e.next
+  end
 end
 
 function isMovingLeft()
@@ -78,10 +87,10 @@ function love.draw()
     drawGround()
     love.graphics.translate(-camera.x, -camera.y)
     
-    local e = running_events_list
+    local e = all_events_list
     while e do
       e.value:run()
-      e = running_events_list.next
+      e = e.next
     end
 end
 
