@@ -70,7 +70,11 @@ function CollisionEvent:update()
   if (isPointInRectangle(player.x, player.y, self.x, self.y, self.width, self.height) or
       isPointInRectangle(player.x + player.width, player.y, self.x, self.y, self.width, self.height) or
       isPointInRectangle(player.x, player.y + player.height, self.x, self.y, self.width, self.height) or
-      isPointInRectangle(player.x + player.width, player.y + player.height, self.x, self.y, self.width, self.height)) and
+      isPointInRectangle(player.x + player.width, player.y + player.height, self.x, self.y, self.width, self.height) or
+      isPointInRectangle(self.x, self.y, player.x, player.y, player.width, player.height) or
+      isPointInRectangle(self.x + self.width, self.y, player.x, player.y, player.width, player.height) or
+      isPointInRectangle(self.x, self.y + self.height, player.x, player.y, player.width, player.height) or
+      isPointInRectangle(self.x + self.width, self.y + self.height, player.x, player.y, player.width, player.height)) and
       not self.triggered then
     self.triggered = true
     self.active = true
