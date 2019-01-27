@@ -6,15 +6,16 @@ TextEvent = {
   timer = 3;
 }
 
-all_events_list = nil
+all_events_list = {}
 
 function TextEvent:new(message, time, x, o)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
-  self.message = message
-  self.timer = time
-  self.x = x
+  o.message = message
+  o.timer = time
+  o.x = x
+  table.insert(all_events_list, o)
   return o
 end
 

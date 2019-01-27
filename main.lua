@@ -43,10 +43,8 @@ function love.load()
   rain_particles:setLinearAcceleration(-20, 90, -25, 100)
   rain_particles:setSizes(0, 1, 0, 1)
 
-  e1 = TextEvent:new("ScHeMa", 2, 700)
-  e2 = TextEvent:new("text message babey....", 5, 600)
-  all_events_list = {next = all_events_list, value = e1}
-  all_events_list = {next = all_events_list, value = e2}
+  TextEvent:new("ScHeMa", 2, 600)
+  TextEvent:new("text message babey....", 5, 600)
 end
 
 function love.update(dt)
@@ -63,10 +61,8 @@ function love.update(dt)
   updateCameraCoords(original_x - player.x)
   rain_particles:update(dt)
 
-  local e = all_events_list
-  while e do
-    e.value:update(dt)
-    e = e.next
+  for i, e in pairs(all_events_list) do
+    e:update(dt)
   end
 end
 
@@ -87,10 +83,8 @@ function love.draw()
     drawGround()
     love.graphics.translate(-camera.x, -camera.y)
     
-    local e = all_events_list
-    while e do
-      e.value:run()
-      e = e.next
+    for i, e in pairs(all_events_list) do
+      e:run()
     end
 end
 
