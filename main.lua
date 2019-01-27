@@ -5,7 +5,7 @@ local anim8 = require 'anim8'
 Timer = require "timer"
 
 GROUNDHEIGHT = 500;
-SPEED_X = 500;
+SPEED_X = 200;
 SPEED_Y = 500;
 SPEED_DEC_X = 10;
 SPEED_DEC_Y = 10;
@@ -126,6 +126,8 @@ function loadEvents()
       player.reached_end = true
     end
   end
+
+  RevTextEvent:new("It's easy to get lost on a rainy day.", 5, 7600)
 end
 
 function love.update(dt)
