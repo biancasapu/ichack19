@@ -20,7 +20,7 @@ function TextEvent:new(message, time, x, o)
 end
 
 function TextEvent:update(dt)
-  if (player.x >= self.x or (player.x * self.x >= 0 and math.abs(player.x) > math.abs(self.x))) and self.triggered == false then
+  if player.x * self.x >= 0 and math.abs(player.x) > math.abs(self.x) and self.triggered == false then
     self.triggered = true
     self.active = true
   end

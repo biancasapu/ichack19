@@ -53,6 +53,11 @@ function love.load()
   TextEvent:new("text message babey....", 5, 600)
 
   loadAnimations()
+  
+  music = love.audio.newSource("assets/sfx/rain-07.mp3", "stream")
+  music:setLooping(true)
+  music:play()
+
 end
 
 function love.update(dt)
