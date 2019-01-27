@@ -1,5 +1,7 @@
 require("conf")
 require("events")
+require("graphics")
+local anim8 = require 'anim8'
 
 GROUNDHEIGHT = 500;
 SPEED_X = 200;
@@ -23,7 +25,9 @@ player = {
     speed = {
       x = 0;
       y = 0;
-    }
+    };
+    dir = "still";
+    jumping = false
 }
 
 ground = {
@@ -48,9 +52,12 @@ function love.load()
   TextEvent:new("ScHeMa", 2, 600)
   TextEvent:new("text message babey....", 5, 600)
 
+  loadAnimations()
+  
   music = love.audio.newSource("assets/sfx/rain-07.mp3", "stream")
   music:setLooping(true)
   music:play()
+
 end
 
 function love.update(dt)
@@ -77,6 +84,9 @@ function love.update(dt)
   for _, e in pairs(all_events_list) do
     e:update(dt)
   end
+
+  walk_anim_r:update(dt)
+  walk_anim_l:update(dt)
 end
 
 function isMovingLeft()
@@ -117,18 +127,34 @@ end
 
 function drawPlayer()
   love.graphics.setColor(0.02, 0.3, 0.8, 1)
-  love.graphics.rectangle("fill", player.x, player.y, player.height, player.width)
+  if player.jumping then
+    love.graphics.setColor(0.8, 0.3, 0.8, 1)
+    love.graphics.rectangle("fill", player.x, player.y, player.height, player.width)
+  elseif (player.dir == "w_right") then
+    walk_anim_r:draw(walk_img, player.x, player.y)
+  elseif (player.dir == "w_left") then
+    walk_anim_l:draw(walk_img, player.x, player.y)
+  elseif (player.dir == "still") then
+    love.graphics.rectangle("fill", player.x, player.y, player.height, player.width)
+  end
 end
 
 function checkKeys()
   if love.keyboard.isDown("left") then
     player.speed.x = -SPEED_X
+    player.dir = "w_left"
   elseif love.keyboard.isDown("right") then
     player.speed.x = SPEED_X
+    player.dir = "w_right"
+  else
+    player.dir = "still"
   end
 
   if love.keyboard.isDown("up") and player.speed.y == 0 and isOnGround() then
     player.speed.y = -SPEED_Y
+    player.jumping = true
+  elseif player.speed.y >= 0 then
+    player.jumping = false
   end
 
 end
