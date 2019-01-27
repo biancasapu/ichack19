@@ -5,8 +5,8 @@ local anim8 = require 'anim8'
 Timer = require "timer"
 
 GROUNDHEIGHT = 500;
-SPEED_X = 800;
-SPEED_Y = 200;
+SPEED_X = 200;
+SPEED_Y = 500;
 SPEED_DEC_X = 10;
 SPEED_DEC_Y = 10;
 CAMERA_TRESHOLD = 300;
