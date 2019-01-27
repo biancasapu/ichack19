@@ -2,8 +2,10 @@ require("conf")
 require("events")
 
 GROUNDHEIGHT = 500;
-SPEED = 200;
-SPEED_DEC = 10;
+SPEED_X = 200;
+SPEED_Y = 500;
+SPEED_DEC_X = 10;
+SPEED_DEC_Y = 10;
 CAMERA_TRESHOLD = 300;
 CAMERA_THRESHOLD_LEFT = CAMERA_TRESHOLD
 CAMERA_THRESHOLD_RIGHT = WIDTH - CAMERA_TRESHOLD
@@ -50,18 +52,25 @@ end
 function love.update(dt)
   
   if isMovingLeft() then
-    player.speed.x = math.min(0, player.speed.x + SPEED_DEC)
+    player.speed.x = math.min(0, player.speed.x + SPEED_DEC_X)
   elseif isMovingRight() then
-    player.speed.x = math.max(0, player.speed.x - SPEED_DEC)
+    player.speed.x = math.max(0, player.speed.x - SPEED_DEC_X)
+  end
+
+  if isOnGround() and player.speed.y >= 0 then
+    player.speed.y = 0
+  else
+    player.speed.y = player.speed.y + SPEED_DEC_Y
   end
 
   local original_x = player.x
   player.x = player.x + player.speed.x * dt
+  player.y = math.min(player.y + player.speed.y * dt, GROUNDHEIGHT)
   checkKeys(dt)
   updateCameraCoords(original_x - player.x)
   rain_particles:update(dt)
 
-  for i, e in pairs(all_events_list) do
+  for _, e in pairs(all_events_list) do
     e:update(dt)
   end
 end
@@ -74,6 +83,10 @@ function isMovingRight()
   return player.speed.x > 0
 end
 
+function isOnGround()
+  return player.y >= GROUNDHEIGHT - player.height
+end
+
 function love.draw()
     drawBackground()
     love.graphics.translate(camera.x, camera.y)
@@ -83,7 +96,7 @@ function love.draw()
     drawGround()
     love.graphics.translate(-camera.x, -camera.y)
     
-    for i, e in pairs(all_events_list) do
+    for _, e in pairs(all_events_list) do
       e:run()
     end
 end
@@ -105,10 +118,15 @@ end
 
 function checkKeys()
   if love.keyboard.isDown("left") then
-    player.speed.x = -SPEED
+    player.speed.x = -SPEED_X
   elseif love.keyboard.isDown("right") then
-    player.speed.x = SPEED
+    player.speed.x = SPEED_X
   end
+
+  if love.keyboard.isDown("up") and player.speed.y == 0 and isOnGround() then
+    player.speed.y = -SPEED_Y
+  end
+
 end
 
 function updateCameraCoords(distance)
