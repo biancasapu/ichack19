@@ -18,10 +18,10 @@ camera = {
 }
 
 player = {
-    width = 100;
-    height = 100;
-    x = WIDTH / 2 - 50;
-    y = GROUNDHEIGHT - 100;
+    width = 250;
+    height = 350;
+    x = WIDTH / 2 - 125;
+    y = GROUNDHEIGHT - 350;
     speed = {
       x = 0;
       y = 0;
@@ -106,6 +106,9 @@ function love.update(dt)
 
   walk_anim_r:update(dt)
   walk_anim_l:update(dt)
+  idle_anim:update(dt)
+  jump_anim_l:update(dt)
+  jump_anim_r:update(dt)
 end
 
 function isMovingLeft()
@@ -163,16 +166,19 @@ function drawUmbrella()
 end
 
 function drawPlayer()
-  love.graphics.setColor(0.02, 0.3, 0.8, 1)
+  love.graphics.setColor(0.8, 0.8, 0.8, 1)
   if player.jumping then
-    love.graphics.setColor(0.8, 0.3, 0.8, 1)
-    love.graphics.rectangle("fill", player.x, player.y, player.height, player.width)
+    if (player.dir == "w_right" or player.dir == "still") then 
+      jump_anim_r:draw(jump_img, player.x, player.y)
+    else
+      jump_anim_l:draw(jump_img, player.x, player.y)
+    end
   elseif (player.dir == "w_right") then
     walk_anim_r:draw(walk_img, player.x, player.y)
   elseif (player.dir == "w_left") then
     walk_anim_l:draw(walk_img, player.x, player.y)
   elseif (player.dir == "still") then
-    love.graphics.rectangle("fill", player.x, player.y, player.height, player.width)
+    idle_anim:draw(idle_img, player.x, player.y)
   end
 end
 

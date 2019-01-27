@@ -1,3 +1,5 @@
+TEXT_HEIGHT = 150
+
 TextEvent = {
   x = 400;
   triggered = false;
@@ -39,7 +41,7 @@ function TextEvent:run()
   if self.timer < 2 then
     alpha = alpha - alpha * (2 - self.timer) / 2
   end
-    love.graphics.printf({{0, 0, 0, alpha}, self.message}, 0, 200, WIDTH, "center")
+    love.graphics.printf({{0, 0, 0, alpha}, self.message}, 0, TEXT_HEIGHT, WIDTH, "center")
   end
 end
 
