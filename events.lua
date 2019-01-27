@@ -41,6 +41,7 @@ function TextEvent:run()
   if self.timer < 2 then
     alpha = alpha - alpha * (2 - self.timer) / 2
   end
+    love.graphics.setColor(1, 1, 1, 1)
     love.graphics.printf({{0, 0, 0, alpha}, self.message}, 0, TEXT_HEIGHT, WIDTH, "center")
   end
 end
@@ -114,6 +115,78 @@ function PositionEvent:update(dt)
 end
 
 function PositionEvent:run()
+  if self.active then
+    self.active = false
+  end
+end
+
+RevTextEvent = {
+  x = 400;
+  triggered = false;
+  active = false;
+  message = "NO MESSAGE";
+  timer = 3;
+}
+
+function RevTextEvent:new(message, time, x, o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  o.message = message
+  o.timer = time
+  o.x = x
+  table.insert(all_events_list, o)
+  return o
+end
+
+function RevTextEvent:update(dt)
+  if player.x <= self.x and not self.triggered then
+    self.triggered = true
+    self.active = true
+  end
+
+  if self.triggered then
+    self.timer = self.timer - dt
+    if self.timer < 0 then
+      self.active = false
+    end
+  end
+end
+
+function RevTextEvent:run()
+  if self.active then
+    local alpha = 1
+    if self.timer < 2 then
+      alpha = alpha - alpha * (2 - self.timer) / 2
+    end
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.printf({{0, 0, 0, alpha}, self.message}, 0, TEXT_HEIGHT, WIDTH, "center")
+  end
+end
+
+RevPositionEvent = {
+  x = 400;
+  triggered = false;
+  active = false;
+}
+
+function RevPositionEvent:new(x, o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  o.x = x
+  table.insert(all_events_list, o)
+  return o
+end
+
+function RevPositionEvent:update(dt)
+  if player.x <= self.x and not self.triggered then
+    self.triggered = true
+    self.active = true
+  end
+end
+
+function RevPositionEvent:run()
   if self.active then
     self.active = false
   end
