@@ -63,8 +63,12 @@ function love.load()
       self.active = false
       player.collected_umbrella = true
       TextEvent:new("Ah, much better.", 4, player.x - 50)
+      music:setVolume(0.5)
     end
   end
+
+  TextEvent:new("It didn't always rain, you know.", 3, 4800)
+  TextEvent:new("It used to be sunny once...", 3, 6000)
 
   loadAnimations()
   
