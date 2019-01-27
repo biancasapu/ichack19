@@ -6,7 +6,7 @@ Timer = require "timer"
 
 GROUNDHEIGHT = 500;
 SPEED_X = 800;
-SPEED_Y = 500;
+SPEED_Y = 200;
 SPEED_DEC_X = 10;
 SPEED_DEC_Y = 10;
 CAMERA_TRESHOLD = 300;
@@ -74,6 +74,9 @@ function love.load()
   loadProps()
   umbrella_effect = love.audio.newSource("assets/sfx/umbrella_effect.mp3", "stream")
 
+  music2 = love.audio.newSource("assets/sfx/MUZ.mp3", "stream")
+  music2:setLooping(true)
+
 end
 
 function loadEvents()
@@ -111,6 +114,8 @@ function loadEvents()
       end
 
       Timer.after(3.0, function() music:stop() bg = {x = 0.972; y = 0.964; z = 0.686;} end)
+
+      Timer.after(3.5, function() music2:play() end)
     end
   end
 
@@ -239,6 +244,7 @@ function love.draw()
     if player.finished_game then
       love.graphics.setColor(0, 0, 0, 1 - player.endgame_timer / 5)
       love.graphics.rectangle("fill", 0, 0, WIDTH, HEIGHT)
+      music2:setVolume(player.endgame_timer / 5)
     end
 
     for _, e in pairs(all_events_list) do
