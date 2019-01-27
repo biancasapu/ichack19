@@ -5,7 +5,7 @@ local anim8 = require 'anim8'
 Timer = require "timer"
 
 GROUNDHEIGHT = 500;
-SPEED_X = 200;
+SPEED_X = 500;
 SPEED_Y = 500;
 SPEED_DEC_X = 10;
 SPEED_DEC_Y = 10;
@@ -36,6 +36,8 @@ player = {
     dir = "still";
     jumping = false;
     collected_umbrella = false;
+    got_rid_of_umbrella = false;
+    reached_end = false;
 }
 
 ground = {
@@ -112,6 +114,18 @@ function loadEvents()
       Timer.after(3.0, function() music:stop() bg = {x = 0.972; y = 0.964; z = 0.686;} end)
     end
   end
+
+  deadEndEvent = PositionEvent:new(9250)
+  function deadEndEvent:run()
+    if self.active then
+      self.active = false
+      player.got_rid_of_umbrella = true
+      TextEvent:new("?", 5, player.x)
+      Timer.after(5, function() TextEvent:new("Did I get lost?", 3, player.x - 50) end)
+      Timer.after(8.5, function() TextEvent:new("Maybe I should be going back.", 4, player.x - 50) end)
+      player.reached_end = true
+    end
+  end
 end
 
 function love.update(dt)
@@ -129,7 +143,7 @@ function love.update(dt)
   end
 
   local original_x = player.x
-  player.x = player.x + player.speed.x * dt
+  player.x = math.min(player.x + player.speed.x * dt, 9350)
   player.y = math.min(player.y + player.speed.y * dt, GROUNDHEIGHT)
   checkKeys(dt)
   updateCameraCoords(original_x - player.x)
@@ -194,6 +208,9 @@ function drawGround()
   for i in range(12) do
     love.graphics.rectangle("fill", ground.x + (i - 1) * WIDTH, ground.y, WIDTH, ground.height)
   end
+
+  love.graphics.setColor(0.219, 0.521, 0.509, 0.5)
+  love.graphics.rectangle("fill", ground.x + 12 * WIDTH, ground.y + 30, WIDTH, ground.height)
 end
 
 -- lord forgive me
@@ -203,15 +220,17 @@ UMBRELLA_HEIGHT = 150
 UMBRELLA_WIDTH = 150
 
 function drawUmbrella()
-  love.graphics.setColor(0.9, 0.9, 0.9, 1)
+  if not player.got_rid_of_umbrella then
+    love.graphics.setColor(0.9, 0.9, 0.9, 1)
 
-  if not player.collected_umbrella then
-    love.graphics.draw(umbrella_img, UMBRELLA_X, ground.y - UMBRELLA_HEIGHT)
-  else
-    if player.dir == "w_right" or player.dir == "still" then
-      love.graphics.draw(umbrella_img, player.x + 5, player.y + 50)
+    if not player.collected_umbrella then
+      love.graphics.draw(umbrella_img, UMBRELLA_X, ground.y - UMBRELLA_HEIGHT)
     else
-      love.graphics.draw(umbrella_img, player.x + player.width - 5, player.y + 50, 0, -1, 1)
+      if player.dir == "w_right" or player.dir == "still" then
+        love.graphics.draw(umbrella_img, player.x + 5, player.y + 50)
+      else
+        love.graphics.draw(umbrella_img, player.x + player.width - 5, player.y + 50, 0, -1, 1)
+      end
     end
   end
 end
