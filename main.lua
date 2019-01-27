@@ -96,7 +96,7 @@ function loadEvents()
     end
   end
 
-  TextEvent:new("It didn't always rain, you know.", 3, 4800)
+  TextEvent:new("It didn't always rain, you know.", 3, 4300)
   TextEvent:new("It used to be sunny once...", 3, 6000)
 
   stopRainEvent = PositionEvent:new(7300)
@@ -121,13 +121,19 @@ function loadEvents()
       self.active = false
       player.got_rid_of_umbrella = true
       TextEvent:new("?", 5, player.x)
-      Timer.after(5, function() TextEvent:new("Did I get lost?", 3, player.x - 50) end)
-      Timer.after(8.5, function() TextEvent:new("Maybe I should be going back.", 4, player.x - 50) end)
+      Timer.after(5, function() TextEvent:new("Did I get lost?", 2, player.x - 50) end)
+      Timer.after(7.5, function() TextEvent:new("Maybe I should be going back.", 3, player.x - 50) end)
       player.reached_end = true
     end
   end
 
   RevTextEvent:new("It's easy to get lost on a rainy day.", 5, 7600)
+  RevTextEvent:new("And many things might not be what they seem...", 5, 6400)
+  RevTextEvent:new("Do you ever think about this?", 5, 4800)
+  RevTextEvent:new("Or...", 3, 3800)
+  RevTextEvent:new("I wonder where my umbrella went...", 5, 3000)
+  RevTextEvent:new("Well, I suppose...", 3, 1500)
+  RevTextEvent:new("It's alright as long as you get home.", 5, 1000)
 end
 
 function love.update(dt)
