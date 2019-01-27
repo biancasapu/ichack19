@@ -22,7 +22,7 @@ function TextEvent:new(message, time, x, o)
 end
 
 function TextEvent:update(dt)
-  if player.x * self.x >= 0 and math.abs(player.x) > math.abs(self.x) and self.triggered == false then
+  if player.x * self.x >= 0 and math.abs(player.x) > math.abs(self.x) and not self.triggered then
     self.triggered = true
     self.active = true
   end
@@ -43,4 +43,46 @@ function TextEvent:run()
   end
     love.graphics.printf({{0, 0, 0, alpha}, self.message}, 0, TEXT_HEIGHT, WIDTH, "center")
   end
+end
+
+CollisionEvent = {
+  x = 400;
+  y = 400;
+  width = 50;
+  height = 50;
+  triggered = false;
+  active = false;
+}
+
+function CollisionEvent:new(x, y, width, height, o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  o.x = x
+  o.y = y
+  o.width = width
+  o.height = height
+  table.insert(all_events_list, o)
+  return o
+end
+
+function CollisionEvent:update()
+  if (isPointInRectangle(player.x, player.y, self.x, self.y, self.width, self.height) or
+      isPointInRectangle(player.x + player.width, player.y, self.x, self.y, self.width, self.height) or
+      isPointInRectangle(player.x, player.y + player.height, self.x, self.y, self.width, self.height) or
+      isPointInRectangle(player.x + player.width, player.y + player.height, self.x, self.y, self.width, self.height)) and
+      not self.triggered then
+    self.triggered = true
+    self.active = true
+  end
+end
+
+function CollisionEvent:run()
+  if self.active then
+    self.active = false
+  end
+end
+
+function isPointInRectangle(p_x, p_y, r_x, r_y, r_width, r_height)
+  return (p_x - r_x) * (p_x - r_x - r_width) <= 0 and (p_y - r_y) * (p_y - r_y - r_height) <= 0
 end
