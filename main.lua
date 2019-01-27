@@ -18,6 +18,12 @@ camera = {
   y = 0;
 }
 
+bg = {
+  x = 0.619;
+  y = 0.619;
+  z = 0.619;
+}
+
 player = {
     width = 250;
     height = 350;
@@ -103,7 +109,7 @@ function loadEvents()
         Timer.after(0.3 * i, function() music:setVolume(0.5 - i * 0.05) end)
       end
 
-      Timer.after(3.0, function() music:stop() end)
+      Timer.after(3.0, function() music:stop() bg = {x = 0.972; y = 0.964; z = 0.686;} end)
     end
   end
 end
@@ -178,7 +184,7 @@ function love.draw()
 end
 
 function drawBackground()
-  love.graphics.setColor(0.619,0.619,0.619,1)
+  love.graphics.setColor(bg.x, bg.y, bg.z, 1)
   love.graphics.rectangle("fill", 0, 0, WIDTH, HEIGHT)
 end
 
