@@ -191,7 +191,7 @@ end
 function drawGround()
   love.graphics.setColor(0,0,0,1)
 
-  for i in range(15) do
+  for i in range(12) do
     love.graphics.rectangle("fill", ground.x + (i - 1) * WIDTH, ground.y, WIDTH, ground.height)
   end
 end
@@ -203,7 +203,7 @@ UMBRELLA_HEIGHT = 150
 UMBRELLA_WIDTH = 150
 
 function drawUmbrella()
-  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.setColor(0.9, 0.9, 0.9, 1)
 
   if not player.collected_umbrella then
     love.graphics.draw(umbrella_img, UMBRELLA_X, ground.y - UMBRELLA_HEIGHT)
