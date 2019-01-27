@@ -5,7 +5,7 @@ local anim8 = require 'anim8'
 Timer = require "timer"
 
 GROUNDHEIGHT = 500;
-SPEED_X = 200;
+SPEED_X = 600;
 SPEED_Y = 500;
 SPEED_DEC_X = 10;
 SPEED_DEC_Y = 10;
@@ -85,7 +85,7 @@ function loadEvents()
   TextEvent:new("You're not going to find anything here...", 2, -1500)
 
   TextEvent:new("...", 2, 1500)
-  TextEvent:new("I need an umbrella...", 3, 2250)
+  TextEvent:new("I really need an umbrella...", 3, 2250)
 
   umbrellaEvent = CollisionEvent:new(UMBRELLA_X, UMBRELLA_Y, UMBRELLA_WIDTH, UMBRELLA_HEIGHT)
 
@@ -93,21 +93,21 @@ function loadEvents()
     if self.active then
       self.active = false
       player.collected_umbrella = true
-      TextEvent:new("Ah, much better.", 4, player.x - 50)
+      TextEvent:new("Ah. Much better.", 4, player.x - 50)
       umbrella_effect:play()
       music:setVolume(0.5)
     end
   end
 
   TextEvent:new("It didn't always rain, you know.", 3, 4300)
-  TextEvent:new("It used to be sunny once...", 3, 6000)
+  TextEvent:new("It used to be sunny around here.", 3, 6000)
 
   stopRainEvent = PositionEvent:new(7300)
 
   function stopRainEvent:run()
     if self.active then
       self.active = false
-      TextEvent:new("Like this.", 4, player.x - 50)
+      TextEvent:new("Sigh. It's been storm after storm.", 4, player.x - 50)
       rain_particles:stop()
 
       for i in range(10) do
@@ -123,19 +123,23 @@ function loadEvents()
     if self.active then
       self.active = false
       player.got_rid_of_umbrella = true
+      tree_img:replacePixels(tree_img2)
+      palm_img:replacePixels(palm_img2)
+      fern_img:replacePixels(fern_img2)
       TextEvent:new("?", 5, player.x)
       Timer.after(5, function() TextEvent:new("Did I get lost?", 2, player.x - 50) end)
       Timer.after(7.5, function() TextEvent:new("Maybe I should be going back.", 3, player.x - 50) end)
+      Timer.after(5, function() idle_anim = idle_anim2 end)
       player.reached_end = true
     end
   end
 
   RevTextEvent:new("It's easy to get lost on a rainy day.", 5, 7600)
-  RevTextEvent:new("And many things might not be what they seem...", 5, 6400)
+  RevTextEvent:new("With this drizzle things might not be what they seem...", 5, 6400)
   RevTextEvent:new("Do you ever think about this?", 5, 4800)
   RevTextEvent:new("Or...", 3, 3800)
-  RevTextEvent:new("I wonder where my umbrella went...", 5, 3000)
-  RevTextEvent:new("Well, I suppose...", 3, 1500)
+  RevTextEvent:new("No, actually, I wonder where my umbrella went...", 5, 3000)
+  RevTextEvent:new("Well, I suppose it's gone...", 3, 1500)
   RevTextEvent:new("It's alright as long as you get home.", 5, 1000)
 
   endGameEvent = RevPositionEvent:new(275)
@@ -250,8 +254,8 @@ function drawGround()
     love.graphics.rectangle("fill", ground.x + (i - 1) * WIDTH, ground.y, WIDTH, ground.height)
   end
 
-  love.graphics.setColor(0.219, 0.521, 0.509, 0.5)
-  love.graphics.rectangle("fill", ground.x + 12 * WIDTH, ground.y + 30, WIDTH, ground.height)
+  love.graphics.setColor(1, 1, 1, 0.6)
+  shore_anim:draw(shore_img, ground.x + 12 * WIDTH, ground.y + 30)
 end
 
 -- lord forgive me

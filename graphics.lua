@@ -4,10 +4,15 @@ function loadAnimations()
   sea_img = love.graphics.newImage("assets/gfx/sea.png")
   local sea_grid = anim8.newGrid(800, 350, sea_img:getWidth(), sea_img:getHeight())
   sea_anim = anim8.newAnimation(sea_grid("1-2", 1), 0.7)
+  
+  shore_img = love.graphics.newImage("assets/gfx/endwater.png")
+  local shore_grid = anim8.newGrid(600, 100, shore_img:getWidth(), shore_img:getHeight())
+  shore_anim = anim8.newAnimation(shore_grid("1-2", 1), 0.4)
 
   idle_img = love.graphics.newImage("assets/gfx/idle.png")
   local idle_grid = anim8.newGrid(player.width, player.height, idle_img:getWidth(), idle_img:getHeight())
   idle_anim = anim8.newAnimation(idle_grid("1-3", 1, "2-2", 1), 0.4)
+  idle_anim2 = idle_anim:clone():flipH()
 
   walk_img = love.graphics.newImage("assets/gfx/walking.png")
   local walk_grid = anim8.newGrid(player.width, player.height, walk_img:getWidth(), walk_img:getHeight())
@@ -24,6 +29,10 @@ function loadAnimations()
   palm_img = love.graphics.newImage("assets/gfx/palm.png")
   fern_img = love.graphics.newImage("assets/gfx/fern.png")
   grass_img = love.graphics.newImage("assets/gfx/grass.png")
+
+  tree_img2 = love.image.newImageData("assets/gfx/tree2.png")
+  palm_img2 = love.image.newImageData("assets/gfx/palm2.png")
+  fern_img2 = love.image.newImageData("assets/gfx/fern2.png")
 end
 
 Prop = {
