@@ -38,6 +38,9 @@ player = {
     collected_umbrella = false;
     got_rid_of_umbrella = false;
     reached_end = false;
+    finished_game = false;
+    endgame_timer = 5;
+    thanked = false;
 }
 
 ground = {
@@ -134,6 +137,14 @@ function loadEvents()
   RevTextEvent:new("I wonder where my umbrella went...", 5, 3000)
   RevTextEvent:new("Well, I suppose...", 3, 1500)
   RevTextEvent:new("It's alright as long as you get home.", 5, 1000)
+
+  endGameEvent = RevPositionEvent:new(275)
+  function endGameEvent:run()
+    if self.active then
+      self.active = false
+      player.finished_game = true
+    end
+  end
 end
 
 function love.update(dt)
@@ -151,7 +162,15 @@ function love.update(dt)
   end
 
   local original_x = player.x
-  player.x = math.min(player.x + player.speed.x * dt, 9350)
+
+  if player.x + player.speed.x * dt > 9350 then
+    player.x = 9350
+  elseif player.reached_end and player.x + player.speed.x * dt < 275 then
+    player.x = 275
+  else
+    player.x = player.x + player.speed.x * dt
+  end
+
   player.y = math.min(player.y + player.speed.y * dt, GROUNDHEIGHT)
   checkKeys(dt)
   updateCameraCoords(original_x - player.x)
@@ -169,6 +188,15 @@ function love.update(dt)
   jump_anim_r:update(dt)
 
   Timer.update(dt)
+
+  if player.finished_game then
+    player.endgame_timer = math.max(player.endgame_timer - dt, 0)
+
+    if player.endgame_timer == 0 and not player.thanked then
+      player.thanked = true
+      ThankEvent:new("Thanks for staying :)", 5, 275)
+    end
+  end
 end
 
 function isMovingLeft()
@@ -199,6 +227,11 @@ function love.draw()
     drawGround()
 
     love.graphics.translate(-camera.x, -camera.y)
+
+    if player.finished_game then
+      love.graphics.setColor(0, 0, 0, 1 - player.endgame_timer / 5)
+      love.graphics.rectangle("fill", 0, 0, WIDTH, HEIGHT)
+    end
 
     for _, e in pairs(all_events_list) do
       e:run()
