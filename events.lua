@@ -90,3 +90,31 @@ end
 function isPointInRectangle(p_x, p_y, r_x, r_y, r_width, r_height)
   return (p_x - r_x) * (p_x - r_x - r_width) <= 0 and (p_y - r_y) * (p_y - r_y - r_height) <= 0
 end
+
+PositionEvent = {
+  x = 400;
+  triggered = false;
+  active = false;
+}
+
+function PositionEvent:new(x, o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  o.x = x
+  table.insert(all_events_list, o)
+  return o
+end
+
+function PositionEvent:update(dt)
+  if player.x * self.x >= 0 and math.abs(player.x) > math.abs(self.x) and not self.triggered then
+    self.triggered = true
+    self.active = true
+  end
+end
+
+function PositionEvent:run()
+  if self.active then
+    self.active = false
+  end
+end

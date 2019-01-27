@@ -2,6 +2,7 @@ require("conf")
 require("events")
 require("graphics")
 local anim8 = require 'anim8'
+Timer = require "timer"
 
 GROUNDHEIGHT = 500;
 SPEED_X = 200;
@@ -50,6 +51,25 @@ function love.load()
   rain_particles:setLinearAcceleration(-20, 90, -25, 100)
   rain_particles:setSizes(0, 1, 0, 1)
 
+  loadEvents()
+
+  loadAnimations()
+  
+  music = love.audio.newSource("assets/sfx/rain-07.mp3", "stream")
+  music:setVolume(0.7)
+  music:setLooping(true)
+  music:play()
+
+  loadProps()
+  umbrella_effect = love.audio.newSource("assets/sfx/umbrella_effect.mp3", "stream")
+
+end
+
+function dummy()
+
+end
+
+function loadEvents()
   TextEvent:new("Did you really want me to fall? :(", 4, -300)
   TextEvent:new("You're not going to find anything here...", 2, -1500)
 
@@ -71,17 +91,21 @@ function love.load()
   TextEvent:new("It didn't always rain, you know.", 3, 4800)
   TextEvent:new("It used to be sunny once...", 3, 6000)
 
-  loadAnimations()
-  
-  music = love.audio.newSource("assets/sfx/rain-07.mp3", "stream")
-  music:setVolume(0.7)
-  music:setLooping(true)
-  music:play()
+  stopRainEvent = PositionEvent:new(7300)
 
-  loadProps()
+  function stopRainEvent:run()
+    if self.active then
+      self.active = false
+      TextEvent:new("Like this.", 4, player.x - 50)
+      rain_particles:stop()
 
-  umbrella_effect = love.audio.newSource("assets/sfx/umbrella_effect.mp3", "stream")
+      for i in range(10) do
+        Timer.after(0.3 * i, function() music:setVolume(0.5 - i * 0.05) end)
+      end
 
+      Timer.after(3.0, function() music:stop() end)
+    end
+  end
 end
 
 function love.update(dt)
@@ -115,6 +139,8 @@ function love.update(dt)
   idle_anim:update(dt)
   jump_anim_l:update(dt)
   jump_anim_r:update(dt)
+
+  Timer.update(dt)
 end
 
 function isMovingLeft()
@@ -159,7 +185,7 @@ end
 function drawGround()
   love.graphics.setColor(0,0,0,1)
 
-  for i in range(10) do
+  for i in range(15) do
     love.graphics.rectangle("fill", ground.x + (i - 1) * WIDTH, ground.y, WIDTH, ground.height)
   end
 end
