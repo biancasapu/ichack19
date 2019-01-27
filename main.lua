@@ -20,14 +20,15 @@ camera = {
 player = {
     width = 100;
     height = 100;
-    x = 350;
+    x = WIDTH / 2 - 50;
     y = GROUNDHEIGHT - 100;
     speed = {
       x = 0;
       y = 0;
     };
     dir = "still";
-    jumping = false
+    jumping = false;
+    collected_umbrella = false;
 }
 
 ground = {
@@ -41,20 +42,34 @@ function love.load()
   font = love.graphics.setNewFont("assets/font.ttf", 28)
 
   local rain_texture = love.graphics.newImage("assets/gfx/rain.png")
-  rain_particles = love.graphics.newParticleSystem(rain_texture, 2000)
+  rain_particles = love.graphics.newParticleSystem(rain_texture, 5000)
   rain_particles:setParticleLifetime(3, 8)
-  rain_particles:setEmissionRate(500)
+  rain_particles:setEmissionRate(1000)
   rain_particles:setEmitterLifetime(-1)
-  rain_particles:setEmissionArea("normal", WIDTH, GROUNDHEIGHT, 0, false)
+  rain_particles:setEmissionArea("normal", 7 * WIDTH, GROUNDHEIGHT, 0, false)
   rain_particles:setLinearAcceleration(-20, 90, -25, 100)
   rain_particles:setSizes(0, 1, 0, 1)
 
-  TextEvent:new("ScHeMa", 2, 600)
-  TextEvent:new("text message babey....", 5, 600)
+  TextEvent:new("Did you really want me to fall? :(", 4, -300)
+  TextEvent:new("You're not going to find anything here...", 2, -1500)
+
+  TextEvent:new("...", 2, 1500)
+  TextEvent:new("I need an umbrella...", 3, 2250)
+
+  umbrellaEvent = CollisionEvent:new(UMBRELLA_X, UMBRELLA_Y, UMBRELLA_WIDTH, UMBRELLA_HEIGHT)
+
+  function umbrellaEvent:run()
+    if self.active then
+      self.active = false
+      player.collected_umbrella = true
+      TextEvent:new("Ah, much better.", 4, player.x - 50)
+    end
+  end
 
   loadAnimations()
   
   music = love.audio.newSource("assets/sfx/rain-07.mp3", "stream")
+  music:setVolume(0.7)
   music:setLooping(true)
   music:play()
 
@@ -108,6 +123,7 @@ function love.draw()
     love.graphics.setColor(1,1,1,1)
     love.graphics.draw(rain_particles, 0, 0)
     drawGround()
+    drawUmbrella()
     love.graphics.translate(-camera.x, -camera.y)
     
     for _, e in pairs(all_events_list) do
@@ -122,7 +138,24 @@ end
 
 function drawGround()
   love.graphics.setColor(0,0,0,1)
-  love.graphics.rectangle("fill", ground.x, ground.y, WIDTH, ground.height)
+
+  for i in range(10) do
+    love.graphics.rectangle("fill", ground.x + (i - 1) * WIDTH, ground.y, WIDTH, ground.height)
+  end
+end
+
+-- lord forgive me
+-- UMBRELLA
+UMBRELLA_X = 3750
+UMBRELLA_HEIGHT = 50
+UMBRELLA_WIDTH = 50
+
+function drawUmbrella()
+  love.graphics.setColor(0, 1, 0, 1)
+
+  if not player.collected_umbrella then
+    love.graphics.rectangle("fill", UMBRELLA_X, ground.y - UMBRELLA_HEIGHT, UMBRELLA_WIDTH, UMBRELLA_HEIGHT)
+  end
 end
 
 function drawPlayer()
@@ -166,5 +199,26 @@ function updateCameraCoords(distance)
     else
       camera.x = camera.x + distance
     end
+end
+
+function range(a, b, step)
+  if not b then
+    b = a
+    a = 1
+  end
+  step = step or 1
+  local f =
+  step > 0 and
+      function(_, lastvalue)
+        local nextvalue = lastvalue + step
+        if nextvalue <= b then return nextvalue end
+      end or
+      step < 0 and
+      function(_, lastvalue)
+        local nextvalue = lastvalue + step
+        if nextvalue >= b then return nextvalue end
+      end or
+      function(_, lastvalue) return lastvalue end
+  return f, nil, a - step
 end
 
